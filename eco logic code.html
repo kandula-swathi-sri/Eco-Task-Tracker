@@ -1,0 +1,104 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EcoSprint - Gamified Sustainability App</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #e5f9e0;
+      margin: 0;
+      padding: 0;
+      color: #2e7d32;
+    }
+    header {
+      background: #a5d6a7;
+      padding: 1rem;
+      text-align: center;
+    }
+    h1 {
+      margin: 0;
+    }
+    .container {
+      padding: 2rem;
+    }
+    .mission, .challenge, .badges {
+      background: #ffffff;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .mission-title {
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+    .btn {
+      background: #388e3c;
+      color: white;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background: #2e7d32;
+    }
+    .wheel {
+      width: 250px;
+      height: 250px;
+      border: 10px solid #a5d6a7;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      margin: auto;
+      font-weight: bold;
+      background: conic-gradient(
+        #81c784 0% 20%, 
+        #66bb6a 20% 40%, 
+        #4caf50 40% 60%, 
+        #388e3c 60% 80%, 
+        #2e7d32 80% 100%
+      );
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>EcoSprint</h1>
+    <p>Save the planet; one mission at a time!</p>
+  </header>
+  <div class="container"><section class="mission">
+  <div class="mission-title">🌊 Water Saver Mission</div>
+  <p>Reduce shower time to save 10 liters of water today.</p>
+  <button class="btn">Mark as Done</button>
+</section>
+
+<section class="mission">
+  <div class="mission-title">🌳 Tree Guardian Mission</div>
+  <p>Take a picture with a tree and share to get bonus points.</p>
+  <button class="btn">Upload Proof</button>
+</section>
+
+<section class="challenge">
+  <h2>🎯 Spin the Eco-Wheel</h2>
+  <div class="wheel">
+    Random Eco Challenge
+  </div>
+  <button class="btn" style="margin-top: 1rem; display: block; margin-left: auto; margin-right: auto;">Spin Now</button>
+</section>
+
+<section class="badges">
+  <h2>🏅 Badges</h2>
+  <ul>
+    <li>Tree Hugger - Complete 3 nature missions</li>
+    <li>Conservation Champ - Earn 100 points</li>
+    <li>Eco Enthusiast - Daily login for 7 days</li>
+  </ul>
+</section>
+
+  </div>
+</body>
+</html>
