@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoWaste Manager</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .challenge-card {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            color: #333;
+        }
+        
+        .scan-card {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        }
+        
+        .input-group {
+            margin: 15px 0;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
+        }
+        
+        .btn-warning {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .result.success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        
+        .result.error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        
+        .points {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+            text-align: center;
+            margin: 10px 0;
+        }
+        
+        .eco-fact {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            border-left: 5px solid #ff9a9e;
+        }
+        
+        .weekly-challenge {
+            background: linear-gradient(135deg, #e0c3fc 0%, #9bb5ff 100%);
+        }
+        
+        .wheel-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .wheel {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: conic-gradient(
+                #ff6b6b 0deg 60deg,
+                #4ecdc4 60deg 120deg,
+                #45b7d1 120deg 180deg,
+                #96ceb4 180deg 240deg,
+                #ffeaa7 240deg 300deg,
+                #dda0dd 300deg 360deg
+            );
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.5s ease;
+            border: 5px solid white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .spinning {
+            animation: spin 2s linear;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(1440deg); }
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .stat-item {
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 10px;
+            color: white;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌱 EcoWaste Manager</h1>
+            <p>Gamify your eco-friendly journey!</p>
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="points" id="totalPoints">0</div>
+                    <div>Total Points</div>
+                </div>
+                <div class="stat-item">
+                    <div class="points" id="itemsScanned">0</div>
+                    <div>Items Scanned</div>
+                </div>
+                <div class="stat-item">
+                    <div class="points" id="challengesCompleted">0</div>
+                    <div>Challenges Done</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Daily Challenge -->
+        <div class="card challenge-card">
+            <h2>🎯 Today's Challenge ({{ today }})</h2>
+            <p><strong>{{ challenge.text }}</strong></p>
+            <p>Reward: <span class="points">{{ challenge.points }} points</span></p>
+            <button class="btn btn-success" onclick="completeChallenge('{{ challenge.type }}')">
+                Complete Challenge
+            </button>
+        </div>
+
+        <!-- Waste Scanner -->
+        <div class="card scan-card">
+            <h2>♻ Waste Scanner</h2>
+            <p>Enter an item to check if it's recyclable:</p>
+            <div class="input-group">
+                <input type="text" id="wasteInput" placeholder="e.g., plastic bottle, newspaper, battery">
+                <button class="btn" onclick="scanWaste()">Scan Item</button>
+            </div>
+            <div id="scanResult" class="result"></div>
+        </div>
+
+        <!-- Lucky Wheel -->
+        <div class="card">
+            <h2>🎲 Lucky Eco Wheel</h2>
+            <div class="wheel-container">
+                <div class="wheel" id="luckyWheel" onclick="spinWheel()">
+                    SPIN!
+                </div>
+                <p>Click the wheel for bonus rewards!</p>
+            </div>
+            <div id="wheelResult" class="result"></div>
+        </div>
+
+        <!-- Weekly Challenge -->
+        <div class="card weekly-challenge">
+            <h2>🏆 Weekly Challenge</h2>
+            <h3>{{ weekly_challenge.title }}</h3>
+            <p>{{ weekly_challenge.description }}</p>
+            <p>Reward: <span class="points">{{ weekly_challenge.points }} points</span></p>
+        </div>
+
+        <!-- Eco Fact -->
+        <div class="card eco-fact">
+            <h2>💡 Eco Fact of the Day</h2>
+            <p>{{ eco_fact }}</p>
+        </div>
+
+        <!-- Eco Tip -->
+        <div class="card">
+            <h2>🌿 Daily Eco Tip</h2>
+            <p>{{ idea }}</p>
+        </div>
+
+        <!-- Navigation -->
+        <div class="card" style="text-align: center;">
+            <a href="/leaderboard" style="text-decoration: none;">
+                <button class="btn btn-warning">View Leaderboard 🏅</button>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        let totalPoints = parseInt(localStorage.getItem('totalPoints') || '0');
+        let itemsScanned = parseInt(localStorage.getItem('itemsScanned') || '0');
+        let challengesCompleted = parseInt(localStorage.getItem('challengesCompleted') || '0');
+
+        // Update display
+        document.getElementById('totalPoints').textContent = totalPoints;
+        document.getElementById('itemsScanned').textContent = itemsScanned;
+        document.getElementById('challengesCompleted').textContent = challengesCompleted;
+
+        function updateStats() {
+            localStorage.setItem('totalPoints', totalPoints);
+            localStorage.setItem('itemsScanned', itemsScanned);
+            localStorage.setItem('challengesCompleted', challengesCompleted);
+            
+            document.getElementById('totalPoints').textContent = totalPoints;
+            document.getElementById('itemsScanned').textContent = itemsScanned;
+            document.getElementById('challengesCompleted').textContent = challengesCompleted;
+        }
+
+        async function scanWaste() {
+            const wasteInput = document.getElementById('wasteInput');
+            const waste = wasteInput.value.trim();
+            
+            if (!waste) {
+                showResult('scanResult', 'Please enter a waste item!', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/scan', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ waste: waste })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    totalPoints += data.points;
+                    itemsScanned++;
+                    updateStats();
+                    
+                    const resultHtml = `
+                        <strong>${data.result}</strong><br>
+                        Points earned: +${data.points}<br>
+                        Decomposition: ${data.decompose}<br>
+                        Disposal: ${data.disposal}
+                    `;
+                    showResult('scanResult', resultHtml, 'success');
+                } else {
+                    showResult('scanResult', data.error, 'error');
+                }
+            } catch (error) {
+                showResult('scanResult', 'Network error occurred', 'error');
+            }
+
+            wasteInput.value = '';
+        }
+
+        async function completeChallenge(type) {
+            try {
+                const response = await fetch('/complete-challenge', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ type: type })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    totalPoints += data.points;
+                    challengesCompleted++;
+                    updateStats();
+                    
+                    alert(🎉 ${data.message});
+                } else {
+                    alert('Error completing challenge');
+                }
+            } catch (error) {
+                alert('Network error occurred');
+            }
+        }
+
+        async function spinWheel() {
+            const wheel = document.getElementById('luckyWheel');
+            wheel.classList.add('spinning');
+            
+            try {
+                const response = await fetch('/spin-wheel', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                const data = await response.json();
+                
+                setTimeout(() => {
+                    wheel.classList.remove('spinning');
+                    
+                    if (response.ok) {
+                        if (data.type === 'points') {
+                            totalPoints += data.value;
+                            updateStats();
+                        }
+                        
+                        showResult('wheelResult', 🎊 ${data.message}<br>${data.value}, 'success');
+                    } else {
+                        showResult('wheelResult', 'Wheel spin failed', 'error');
+                    }
+                }, 2000);
+                
+            } catch (error) {
+                setTimeout(() => {
+                    wheel.classList.remove('spinning');
+                    showResult('wheelResult', 'Network error occurred', 'error');
+                }, 2000);
+            }
+        }
+
+        function showResult(elementId, message, type) {
+            const resultDiv = document.getElementById(elementId);
+            resultDiv.innerHTML = message;
+            resultDiv.className = result ${type};
+            resultDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                resultDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Allow Enter key to scan
+        document.getElementById('wasteInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                scanWaste();
+            }
+        });
+    </script>
+</body>
+</html>
